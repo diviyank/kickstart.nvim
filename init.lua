@@ -205,12 +205,22 @@ vim.keymap.set('n', '<C-up>', '<C-u>', { desc = 'Move Up a page' })
 vim.keymap.set('n', '<C-down>', '<C-d>', { desc = 'Move Down a page' })
 vim.keymap.set('v', '<C-up>', '<C-u>', { desc = 'Move Up a page' })
 vim.keymap.set('v', '<C-down>', '<C-d>', { desc = 'Move Down a page' })
+vim.keymap.set('n', '<C-x><C-s>', ':w<CR>', { desc = 'Save buffer' })
+vim.keymap.set('i', '<C-h>', '<C-w>', { desc = 'delete backwards', noremap = true })
+vim.keymap.set('i', '<C-BS>', '<C-o>db', { desc = 'Delete backwards' })
+vim.keymap.set('i', '<C-Del>', '<C-o>dw', { desc = 'Delete forwards' })
+vim.keymap.set('n', '<C-s>', '/', { desc = 'Delete forwards' })
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
+-- vim.keymap.set('n', '<leader>F', '<leader>f')
+-- vim.keymap.set('n', '<leader>bf', ':Telescope file_browser path=%:p:h select_buffer=true<CR>', { desc = 'Open file browser' })
+vim.keymap.set('n', '<leader>bf', '<leader>sf')
+vim.keymap.set('n', '<leader>bk', ':q<CR>', { desc = 'Close buffer' })
+vim.keymap.set('n', '<leader>p', ":lua require'telescope'.extensions.project.project{}<CR>", { noremap = true, silent = true })
 
 -- Highlight when yanking (copying) text
 --  Try it with `yap` in normal mode
---  See `:help vim.highlight.on_yank()`
+--  See `:help vim.highlight.on_yank)`
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
   group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
@@ -335,6 +345,8 @@ require('lazy').setup({
         { '<leader>s', group = '[S]earch' },
         { '<leader>w', group = '[W]orkspace' },
         { '<leader>t', group = '[T]oggle' },
+        { '<leader>b', group = '[B]uffer' },
+        { '<leader>p', group = '[P]roject' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
       },
     },
@@ -407,6 +419,30 @@ require('lazy').setup({
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
           },
+          project = {
+            base_dirs = {
+              { '~/fentech/algorithm', max_depth = 3 },
+              { '~/fentech/', max_depth = 1 },
+              { '~/fentech/clairvoyant', max_depth = 2 },
+              { '~/fentech/report', max_depth = 2 },
+              { '~/fentech/pct', max_depth = 2 },
+              { '~/fentech/tools', max_depth = 2 },
+              { '~/fentech/dsales', max_depth = 2 },
+              { '~/fentech/study', max_depth = 1 },
+              { '~/fentech/research', max_depth = 2 },
+            },
+            hidden_files = true, -- default: false
+            theme = 'dropdown',
+            order_by = 'asc',
+            search_by = 'title',
+            sync_with_nvim_tree = true, -- default false
+            -- default for on_project_selected = find project files
+            on_project_selected = function(prompt_bufnr)
+              -- Do anything you want in here. For example:
+              require('telescope._extensions.project.actions').change_working_directory(prompt_bufnr, false)
+              require('harpoon.ui').nav_file(1)
+            end,
+          },
         },
       }
 
@@ -452,6 +488,18 @@ require('lazy').setup({
     end,
   },
 
+  {
+    'nvim-telescope/telescope-file-browser.nvim',
+    dependencies = { 'nvim-telescope/telescope.nvim', 'nvim-lua/plenary.nvim' },
+  },
+  {
+    'nvim-telescope/telescope-project.nvim',
+    dependencies = {
+      'nvim-telescope/telescope.nvim',
+      'nvim-lua/plenary.nvim',
+      'ThePrimeagen/harpoon',
+    },
+  },
   -- LSP Plugins
   {
     -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
@@ -495,7 +543,7 @@ require('lazy').setup({
       -- (sometimes called LSP servers, but that's kind of like ATM Machine) are standalone
       -- processes that communicate with some "client" - in this case, Neovim!
       --
-      -- LSP provides Neovim with features like:
+      -- LSP provides Neovim with eatures like:
       --  - Go to definition
       --  - Find references
       --  - Autocompletion
@@ -802,7 +850,7 @@ require('lazy').setup({
           -- Accept ([y]es) the completion.
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
-          ['<C-y>'] = cmp.mapping.confirm { select = true },
+          ['<CR>'] = cmp.mapping.confirm { select = true },
 
           -- If you prefer more traditional completion keymaps,
           -- you can uncomment the following lines
