@@ -136,7 +136,7 @@ vim.opt.updatetime = 250
 
 -- Decrease mapped sequence wait time
 -- Displays which-key popup sooner
-vim.opt.timeoutlen = 300
+vim.opt.timeoutlen = 100
 
 -- Configure how new splits should be opened
 vim.opt.splitright = true
@@ -209,13 +209,20 @@ vim.keymap.set('n', '<C-x><C-s>', ':w<CR>', { desc = 'Save buffer' })
 vim.keymap.set('i', '<C-h>', '<C-w>', { desc = 'delete backwards', noremap = true })
 vim.keymap.set('i', '<C-BS>', '<C-o>db', { desc = 'Delete backwards' })
 vim.keymap.set('i', '<C-Del>', '<C-o>dw', { desc = 'Delete forwards' })
+vim.keymap.set('i', '<C-e>', '<C-o>$', { desc = 'Move End of Line' })
+vim.keymap.set('i', '<C-a>', '<C-o>^', { desc = 'Move beginning of Line' })
 vim.keymap.set('n', '<C-s>', '/', { desc = 'Delete forwards' })
+vim.keymap.set('n', '<leader>w', '<C-w>', { desc = 'Window menu' })
+vim.keymap.set('n', '<S-Tab>', ':b#<CR>', { desc = 'Previous buffer' })
+vim.keymap.set('n', '<leader>cc', ':Telescope neoclip<CR>', { desc = 'Neo[C]lip' })
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 -- vim.keymap.set('n', '<leader>F', '<leader>f')
 -- vim.keymap.set('n', '<leader>bf', ':Telescope file_browser path=%:p:h select_buffer=true<CR>', { desc = 'Open file browser' })
-vim.keymap.set('n', '<leader>bf', '<leader>sf')
-vim.keymap.set('n', '<leader>bk', ':q<CR>', { desc = 'Close buffer' })
+vim.keymap.set('n', '<leader>fn', ':Oil<CR>', { desc = '[F]ile [N]avigation (Oil)' })
+vim.keymap.set('n', '<leader>bk', ':bd<CR>', { desc = 'Close buffer' })
+vim.keymap.set('n', '<leader>br', ':edit!<CR>', { desc = 'Reload buffer' })
 vim.keymap.set('n', '<leader>p', ":lua require'telescope'.extensions.project.project{}<CR>", { noremap = true, silent = true })
 
 -- Highlight when yanking (copying) text
@@ -229,6 +236,15 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+local uv = vim.loop
+
+vim.api.nvim_create_autocmd({ 'VimEnter', 'VimLeave' }, {
+  callback = function()
+    if vim.env.TMUX_PLUGIN_MANAGER_PATH then
+      uv.spawn(vim.env.TMUX_PLUGIN_MANAGER_PATH .. '/tmux-window-name/scripts/rename_session_windows.py', {})
+    end
+  end,
+})
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -345,7 +361,9 @@ require('lazy').setup({
         { '<leader>s', group = '[S]earch' },
         { '<leader>w', group = '[W]orkspace' },
         { '<leader>t', group = '[T]oggle' },
+        { '<leader>m', group = '[M]ulticursor' },
         { '<leader>b', group = '[B]uffer' },
+        { '<leader>w', group = '[W]indow' },
         { '<leader>p', group = '[P]roject' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
       },
@@ -454,6 +472,7 @@ require('lazy').setup({
       local builtin = require 'telescope.builtin'
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
+      vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = '[F]ile Search' })
       vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
       vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
@@ -461,6 +480,7 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
+      vim.keymap.set('n', '<leader>bb', builtin.buffers, { desc = '[B]uffer Find existing [B]uffers' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
 
       -- Slightly advanced example of overriding default behavior and theme
@@ -684,7 +704,9 @@ require('lazy').setup({
         rust_analyzer = {},
         ruff = {},
         mypy = {},
+        sqlls = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
+        --
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
         --    https://github.com/pmizio/typescript-tools.nvim
@@ -746,12 +768,12 @@ require('lazy').setup({
     cmd = { 'ConformInfo' },
     keys = {
       {
-        '<leader>f',
+        '<leader>bf',
         function()
           require('conform').format { async = true, lsp_format = 'fallback' }
         end,
         mode = '',
-        desc = '[F]ormat buffer',
+        desc = '[B]uffer [F]ormat',
       },
     },
     opts = {
