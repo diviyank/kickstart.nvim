@@ -153,7 +153,6 @@ vim.opt.inccommand = 'split'
 
 -- Show which line your cursor is on
 vim.opt.cursorline = true
-
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
@@ -214,6 +213,8 @@ vim.keymap.set('i', '<C-a>', '<C-o>^', { desc = 'Move beginning of Line' })
 vim.keymap.set('n', '<C-s>', '/', { desc = 'Delete forwards' })
 vim.keymap.set('n', '<leader>w', '<C-w>', { desc = 'Window menu' })
 vim.keymap.set('n', '<S-Tab>', ':b#<CR>', { desc = 'Previous buffer' })
+vim.keymap.set('n', '<M-[>', ':bprevious<CR>', { desc = 'Previous buffer' })
+vim.keymap.set('n', '<M-]>', ':bnext<CR>', { desc = 'Next buffer' })
 vim.keymap.set('n', '<leader>cc', ':Telescope neoclip<CR>', { desc = 'Neo[C]lip' })
 
 -- [[ Basic Autocommands ]]
