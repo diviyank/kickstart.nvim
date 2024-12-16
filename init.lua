@@ -219,10 +219,10 @@ vim.keymap.set('n', '<leader>cc', ':Telescope neoclip<CR>', { desc = 'Neo[C]lip'
 
 -- [[Window operations]]
 vim.keymap.set('n', '<leader>w', '<C-w>', { desc = 'Window menu' })
-vim.keymap.set('n', '<S-left>', '<C-w>h', { desc = 'Goto left window' })
-vim.keymap.set('n', '<S-right>', '<C-w>l', { desc = 'Goto right window' })
-vim.keymap.set('i', '<S-left>', '<C-o><C-w>h', { desc = 'Goto left window' })
-vim.keymap.set('i', '<S-right>', '<C-o><C-w>l', { desc = 'Goto right window' })
+vim.keymap.set('n', '<M-left>', '<C-w>h', { desc = 'Goto left window' })
+vim.keymap.set('n', '<M-right>', '<C-w>l', { desc = 'Goto right window' })
+vim.keymap.set('i', '<M-left>', '<C-o><C-w>h', { desc = 'Goto left window' })
+vim.keymap.set('i', '<M-right>', '<C-o><C-w>l', { desc = 'Goto right window' })
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 -- vim.keymap.set('n', '<leader>F', '<leader>f')
@@ -713,6 +713,7 @@ require('lazy').setup({
         ruff = {},
         mypy = {},
         sqlls = {},
+        sqls = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         --
