@@ -136,7 +136,7 @@ vim.opt.updatetime = 250
 
 -- Decrease mapped sequence wait time
 -- Displays which-key popup sooner
-vim.opt.timeoutlen = 100
+vim.opt.timeoutlen = 70
 
 -- Configure how new splits should be opened
 vim.opt.splitright = true
@@ -205,18 +205,24 @@ vim.keymap.set('n', '<C-down>', '<C-d>', { desc = 'Move Down a page' })
 vim.keymap.set('v', '<C-up>', '<C-u>', { desc = 'Move Up a page' })
 vim.keymap.set('v', '<C-down>', '<C-d>', { desc = 'Move Down a page' })
 vim.keymap.set('n', '<C-x><C-s>', ':w<CR>', { desc = 'Save buffer' })
+vim.keymap.set('n', '<C-x><C-c>', ':wqa<CR>', { desc = 'Quit nvim' })
 vim.keymap.set('i', '<C-h>', '<C-w>', { desc = 'delete backwards', noremap = true })
 vim.keymap.set('i', '<C-BS>', '<C-o>db', { desc = 'Delete backwards' })
 vim.keymap.set('i', '<C-Del>', '<C-o>dw', { desc = 'Delete forwards' })
 vim.keymap.set('i', '<C-e>', '<C-o>$', { desc = 'Move End of Line' })
 vim.keymap.set('i', '<C-a>', '<C-o>^', { desc = 'Move beginning of Line' })
 vim.keymap.set('n', '<C-s>', '/', { desc = 'Delete forwards' })
-vim.keymap.set('n', '<leader>w', '<C-w>', { desc = 'Window menu' })
 vim.keymap.set('n', '<S-Tab>', ':b#<CR>', { desc = 'Previous buffer' })
 vim.keymap.set('n', '<M-[>', ':bprevious<CR>', { desc = 'Previous buffer' })
 vim.keymap.set('n', '<M-]>', ':bnext<CR>', { desc = 'Next buffer' })
 vim.keymap.set('n', '<leader>cc', ':Telescope neoclip<CR>', { desc = 'Neo[C]lip' })
 
+-- [[Window operations]]
+vim.keymap.set('n', '<leader>w', '<C-w>', { desc = 'Window menu' })
+vim.keymap.set('n', '<S-left>', '<C-w>h', { desc = 'Goto left window' })
+vim.keymap.set('n', '<S-right>', '<C-w>l', { desc = 'Goto right window' })
+vim.keymap.set('i', '<S-left>', '<C-o><C-w>h', { desc = 'Goto left window' })
+vim.keymap.set('i', '<S-right>', '<C-o><C-w>l', { desc = 'Goto right window' })
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 -- vim.keymap.set('n', '<leader>F', '<leader>f')
@@ -448,6 +454,7 @@ require('lazy').setup({
               { '~/fentech/tools', max_depth = 2 },
               { '~/fentech/dsales', max_depth = 2 },
               { '~/fentech/study', max_depth = 1 },
+              { '~/.config/', max_depth = 2 },
               { '~/fentech/research', max_depth = 2 },
             },
             hidden_files = true, -- default: false
