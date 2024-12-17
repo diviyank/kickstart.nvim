@@ -215,6 +215,8 @@ vim.keymap.set('n', '<C-s>', '/', { desc = 'Delete forwards' })
 vim.keymap.set('n', '<S-Tab>', ':b#<CR>', { desc = 'Previous buffer' })
 vim.keymap.set('n', '<M-[>', ':bprevious<CR>', { desc = 'Previous buffer' })
 vim.keymap.set('n', '<M-]>', ':bnext<CR>', { desc = 'Next buffer' })
+vim.keymap.set('i', '<M-[>', ':bprevious<CR>', { desc = 'Previous buffer' })
+vim.keymap.set('i', '<M-]>', ':bnext<CR>', { desc = 'Next buffer' })
 vim.keymap.set('n', '<leader>cc', ':Telescope neoclip<CR>', { desc = 'Neo[C]lip' })
 
 -- [[Window operations]]
