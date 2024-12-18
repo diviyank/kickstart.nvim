@@ -712,7 +712,11 @@ require('lazy').setup({
         -- gopls = {},
         pyright = {},
         rust_analyzer = {},
-        ruff = {},
+        ruff = {
+          settings = {
+            configuration = '~/.config/ruff/config.toml',
+          },
+        },
         mypy = {},
         sqlls = {},
         sqls = {},
