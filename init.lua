@@ -720,6 +720,7 @@ require('lazy').setup({
         mypy = {},
         sqlls = {},
         sqls = {},
+        gopls = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         --
