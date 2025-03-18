@@ -231,7 +231,7 @@ vim.keymap.set('i', '<M-right>', '<C-o><C-w>l', { desc = 'Goto right window' })
 -- vim.keymap.set('n', '<leader>F', '<leader>f')
 -- vim.keymap.set('n', '<leader>bf', ':Telescope file_browser path=%:p:h select_buffer=true<CR>', { desc = 'Open file browser' })
 vim.keymap.set('n', '<leader>fn', ':Oil<CR>', { desc = '[F]ile [N]avigation (Oil)' })
-vim.keymap.set('n', '<leader>bk', ':bd<CR>', { desc = 'Close buffer' })
+vim.keymap.set('n', '<leader>bk', ':BufDel<CR>', { desc = 'Close buffer' })
 vim.keymap.set('n', '<leader>br', ':edit!<CR>', { desc = 'Reload buffer' })
 vim.keymap.set('n', '<leader>p', ":lua require'telescope'.extensions.project.project{}<CR>", { noremap = true, silent = true })
 
