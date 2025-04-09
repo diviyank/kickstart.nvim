@@ -486,7 +486,7 @@ require('lazy').setup({
       vim.keymap.set(
         'n',
         '<leader>ff',
-        ':lua require"telescope.builtin".find_files({ hidden = true , file_ignore_patterns = { "^.git/" }})<CR>',
+        ':lua require"telescope.builtin".find_files({ hidden = true , file_ignore_patterns = { "^.git/",".venv/",".ipynb_checkpoints" }})<CR>',
         { desc = '[F]ile Search' }
       )
       vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
