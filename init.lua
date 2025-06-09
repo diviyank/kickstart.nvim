@@ -486,7 +486,7 @@ require('lazy').setup({
       vim.keymap.set(
         'n',
         '<leader>ff',
-        ':lua require"telescope.builtin".find_files({ hidden = true , file_ignore_patterns = { "^.git/",".venv/",".ipynb_checkpoints" }})<CR>',
+        ':lua require"telescope.builtin".find_files({ hidden = true ,ignore_file = "~/.config/nvim/.ignore", file_ignore_patterns = { "^.git/",".venv/",".ipynb_checkpoints" }})<CR>',
         { desc = '[F]ile Search' }
       )
       vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
@@ -696,6 +696,13 @@ require('lazy').setup({
             -- Enable inlay hints by default
             vim.lsp.inlay_hint.enable()
           end
+
+          require('lsp_signature').on_attach({
+            bind = true,
+            handler_opts = {
+              border = 'rounded',
+            },
+          }, event.buf)
         end,
       })
 
@@ -917,9 +924,25 @@ require('lazy').setup({
 
           -- If you prefer more traditional completion keymaps,
           -- you can uncomment the following lines
-          --['<CR>'] = cmp.mapping.confirm { select = true },
-          --['<Tab>'] = cmp.mapping.select_next_item(),
-          --['<S-Tab>'] = cmp.mapping.select_prev_item(),
+          -- ['<CR>'] = cmp.mapping(function(fallback)
+          --   if cmp.visible() then
+          --     local entry = cmp.get_selected_entry()
+          --     if entry == nil then
+          --       -- select and confirm with a small delay
+          --       cmp.select_next_item { behavior = cmp.SelectBehavior.Select }
+          --       vim.defer_fn(function()
+          --         cmp.confirm { select = true }
+          --       end, 10)
+          --     else
+          --       cmp.confirm { select = true }
+          --     end
+          --   else
+          --     fallback()
+          --   end
+          -- end, { 'i', 's' }),
+
+          ['<Tab>'] = cmp.mapping.select_next_item(),
+          ['<S-Tab>'] = cmp.mapping.select_prev_item(),
 
           -- Manually trigger a completion from nvim-cmp.
           --  Generally you don't need this, because nvim-cmp will display
@@ -957,6 +980,8 @@ require('lazy').setup({
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
           { name = 'path' },
+          { name = 'vim-dadbod-completion' },
+          -- { name = 'blink' },
         },
       }
     end,
