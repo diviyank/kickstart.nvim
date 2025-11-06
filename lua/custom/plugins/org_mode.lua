@@ -9,7 +9,7 @@ return {
       org_default_notes_file = '~/orgfiles/refile.org',
       org_startup_folded = 'content',
       org_log_done = 'time',
-      org_todo_keywords = { 'TODO', 'WAIT', 'MEET', 'MAIL', 'TEST', 'CURR', 'PRIO1', 'PRIO2', 'PRIO3', '|', 'DONE', 'DELEG', 'KILL' },
+      org_todo_keywords = { 'TODO', 'BUG', 'WAIT', 'MEET', 'MAIL', 'TEST', 'CURR', 'PRIO1', 'PRIO2', 'PRIO3', '|', 'DONE', 'DELEG', 'KILL' },
       org_todo_keyword_faces = {
         TODO = ':foreground #FFFFFF :background #4185B2',
         WAIT = ':foreground #FFD700',
@@ -17,6 +17,7 @@ return {
         MAIL = ':foreground #87CEEB',
         TEST = ':foreground #FFFFFF :background #2E8B57',
         CURR = ':foreground #F54927',
+        BUG = ':foreground #FFFFFF :background #DC143C :weight bold',
         PRIO1 = ':foreground #FFFFFF :background #DC143C :weight bold',
         PRIO2 = ':foreground #000000 :background #FF8C00 :weight bold',
         PRIO3 = ':foreground #000000 :background #FFC72C :weight bold',
