@@ -735,7 +735,8 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        pyright = {},
+        -- pyright = {},
+        -- mypy = {},
         -- rust_analyzer = {
         --   ['rust-analyzer'] = {
         --     checkOnSave = {
@@ -743,12 +744,23 @@ require('lazy').setup({
         --     },
         --   },
         -- },
+        ty = {
+          settings = {
+            ty = {
+              diagnosticMode = 'workspace',
+
+              inlayHints = {
+                variableTypes = true,
+                callArgumentNames = true,
+              },
+            },
+          },
+        },
         ruff = {
           settings = {
             configuration = '~/.config/ruff/config.toml',
           },
         },
-        mypy = {},
         gopls = {},
         golangci_lint_ls = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
