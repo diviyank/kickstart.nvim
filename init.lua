@@ -235,6 +235,14 @@ vim.keymap.set('n', '<leader>bk', ':BufDel<CR>', { desc = 'Close buffer' })
 vim.keymap.set('n', '<leader>br', ':edit!<CR>', { desc = 'Reload buffer' })
 vim.keymap.set('n', '<leader>p', ":lua require'telescope'.extensions.project.project{}<CR>", { noremap = true, silent = true })
 
+--
+-- indents in visual mode:
+-- visual mode: indent/outdent and keep selection
+vim.keymap.set('v', '<', '<gv')
+vim.keymap.set('v', '>', '>gv')
+--
+--
+--
 -- Highlight when yanking (copying) text
 --  Try it with `yap` in normal mode
 --  See `:help vim.highlight.on_yank)`
