@@ -41,7 +41,10 @@ return {
     vim.keymap.set('n', '<leader>dB', function()
       dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
     end, { desc = 'Debug: Set Conditional Breakpoint' })
-
+    vim.keymap.set('n', '<leader>de', dapui.eval, { desc = 'Debug: Eval under cursor' })
+    vim.keymap.set('n', '<leader>dr', function()
+      require('dap').repl.open()
+    end, { desc = 'Debug: Open REPL' })
     -- 4. Auto-Open UI (but DO NOT Auto-Close)
     dap.listeners.after.event_initialized['dapui_config'] = dapui.open
     -- Commented out the auto-close listeners so you can see errors:
@@ -55,7 +58,7 @@ return {
       request = 'launch',
       name = 'FastAPI (module)',
       module = 'uvicorn',
-      args = { 'main:app', '--reload' },
+      args = { 'src.main:app', '--reload' },
       -- Change 'main:app' if your entry point is different
       pythonPath = function()
         return require('dap-python').resolve_python()
