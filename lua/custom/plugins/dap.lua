@@ -64,5 +64,23 @@ return {
         return require('dap-python').resolve_python()
       end,
     })
+
+    -- OPTION: Run Current File with Project Root in PYTHONPATH
+    -- This fixes the "ModuleNotFoundError: No module named 'src'" issue
+    table.insert(dap.configurations.python, {
+      type = 'python',
+      request = 'launch',
+      name = 'Python: Current File (Root Path)',
+      program = '${file}', -- Run the active file
+      cwd = '${workspaceFolder}', -- Run from project root
+      env = {
+        -- This is the magic line. It adds the project root to python path.
+        -- So 'from src.mod import func' works even if running a file inside src/
+        PYTHONPATH = '${workspaceFolder}',
+      },
+      pythonPath = function()
+        return require('dap-python').resolve_python()
+      end,
+    })
   end,
 }
