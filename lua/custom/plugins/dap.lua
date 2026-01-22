@@ -33,8 +33,16 @@ return {
     vim.keymap.set('n', '<F3>', dap.step_into, { desc = 'Debug: Step Into' })
     vim.keymap.set('n', '<F4>', dap.step_over, { desc = 'Debug: Step Over' })
     vim.keymap.set('n', '<F5>', dap.step_out, { desc = 'Debug: Step Out' })
-    vim.keymap.set('n', '<F8>', dap.terminate, { desc = 'Debug: Terminate' })
-    vim.keymap.set('n', '<F7>', dapui.toggle, { desc = 'Debug: Toggle UI' })
+    vim.keymap.set('n', '<F7>', function()
+      local dap = require 'dap'
+      if dap.session() then
+        dap.restart()
+      else
+        dap.run_last()
+      end
+    end, { desc = 'Debug: Restart / Run Last' })
+    vim.keymap.set('n', '<F10>', dap.terminate, { desc = 'Debug: Terminate' })
+    vim.keymap.set('n', '<F9>', dapui.toggle, { desc = 'Debug: Toggle UI' })
     vim.keymap.set('n', '<leader>dt', dap.terminate, { desc = 'Debug: Terminate' })
     -- New mappings starting with <leader>d
     vim.keymap.set('n', '<leader>db', dap.toggle_breakpoint, { desc = 'Debug: Toggle Breakpoint' })
