@@ -67,7 +67,20 @@ return {
       name = 'FastAPI (module)',
       module = 'uvicorn',
       args = { 'src.main:app', '--reload' },
+      justMyCode = true,
+      rules = {
+        -- Rule 1: Always include your own project code (optional, usually automatic)
+        { include = true, path = '${workspaceFolder}/**' },
+
+        -- Rule 2: INCLUDE the specific package you want to debug
+        { include = true, path = '**/site-packages/db_bus/**' },
+        { include = true, path = '**/site-packages/base_db/**' },
+        { include = true, path = '**/site-packages/kafka_manager/**' },
+        { include = true, path = '**/site-packages/tool_serving/**' },
+      },
+      --
       -- Change 'main:app' if your entry point is different
+
       pythonPath = function()
         return require('dap-python').resolve_python()
       end,
@@ -81,6 +94,18 @@ return {
       name = 'Python: Current File (Root Path)',
       program = '${file}', -- Run the active file
       cwd = '${workspaceFolder}', -- Run from project root
+
+      justMyCode = true,
+      rules = {
+        -- Rule 1: Always include your own project code (optional, usually automatic)
+        { include = true, path = '${workspaceFolder}/**' },
+
+        -- Rule 2: INCLUDE the specific package you want to debug
+        { include = true, path = '**/site-packages/db_bus/**' },
+        { include = true, path = '**/site-packages/base_db/**' },
+        { include = true, path = '**/site-packages/kafka_manager/**' },
+        { include = true, path = '**/site-packages/tool_serving/**' },
+      },
       env = {
         -- This is the magic line. It adds the project root to python path.
         -- So 'from src.mod import func' works even if running a file inside src/
