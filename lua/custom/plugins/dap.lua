@@ -28,6 +28,25 @@ return {
       end
     end
 
+    -- dap.listeners.after.event_stopped["auto_center"] = function()
+    --    vim.schedule(function()
+    --      -- 1. jump to the current line (dap usually does this, but we force it)
+    --      -- 2. center the screen (zz) to make sure it's visible
+    --      vim.cmd("normal! zz")
+    --    end)
+    --  end
+
+    -- Add this to your keymaps
+    vim.keymap.set('n', '<F2>', function()
+      local session = require('dap').session()
+      if session then
+        -- This commands dap to jump to the current stack frame
+        require('dap').focus_frame()
+        vim.cmd 'normal! zz'
+      end
+    end, { desc = 'Debug: [F]ocus on current line' })
+
+    --
     -- 3. Update Keymaps to use <leader>d (Debug) to avoid conflict
     vim.keymap.set('n', '<F6>', dap.continue, { desc = 'Debug: Start/Continue' })
     vim.keymap.set('n', '<F3>', dap.step_into, { desc = 'Debug: Step Into' })

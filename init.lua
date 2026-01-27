@@ -196,10 +196,15 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 --  Use CTRL+<hjkl> to switch between windows
 --
 --  See `:help wincmd` for a list of all window commands
-vim.keymap.set('n', '<Alt-left>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
-vim.keymap.set('n', '<Alt-right>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
-vim.keymap.set('n', '<Alt-up>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
-vim.keymap.set('n', '<Alt-Down>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+-- vim.keymap.set('n', '<Alt-left>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
+-- vim.keymap.set('n', '<Alt-right>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
+-- vim.keymap.set('n', '<Alt-up>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
+-- vim.keymap.set('n', '<Alt-Down>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+
+vim.keymap.set('n', '<M-Left>', '<C-w>h', { desc = 'Move focus to the left window' })
+vim.keymap.set('n', '<M-Right>', '<C-w>l', { desc = 'Move focus to the right window' })
+vim.keymap.set('n', '<M-Down>', '<C-w>j', { desc = 'Move focus to the lower window' })
+vim.keymap.set('n', '<M-Up>', '<C-w>k', { desc = 'Move focus to the upper window' })
 
 vim.keymap.set('n', '<C-up>', '<C-u>', { desc = 'Move Up a page' })
 vim.keymap.set('n', '<C-down>', '<C-d>', { desc = 'Move Down a page' })
@@ -1021,6 +1026,7 @@ require('lazy').setup({
       --  into multiple repos for maintenance purposes.
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
+      'rcarriga/cmp-dap',
     },
     config = function()
       -- See `:help cmp`
@@ -1109,6 +1115,11 @@ require('lazy').setup({
         sources = {
           { name = 'vim-dadbod-completion' },
           { name = 'buffer' },
+        },
+      })
+      cmp.setup.filetype({ 'dap-repl', 'dapui_watches', 'dapui_hover' }, {
+        sources = {
+          { name = 'dap' },
         },
       })
     end,
