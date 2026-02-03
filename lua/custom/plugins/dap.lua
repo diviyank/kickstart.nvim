@@ -134,5 +134,21 @@ return {
         return require('dap-python').resolve_python()
       end,
     })
+
+    dap.configurations.rust = dap.configurations.rust or {}
+    table.insert(dap.configurations.rust, {
+      {
+        name = 'Attach to Postgres (pgrx)',
+        type = 'codelldb',
+        request = 'attach',
+        pid = function()
+          -- This helper finds the postgres process ID
+          local handle = io.popen "pgrep -u $(whoami) -f 'postgres: '"
+          local result = handle:read '*a'
+          handle:close()
+          return tonumber(result) or vim.fn.input 'Process ID: '
+        end,
+      },
+    })
   end,
 }

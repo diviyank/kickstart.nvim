@@ -499,7 +499,7 @@ require('lazy').setup({
       vim.keymap.set(
         'n',
         '<leader>ff',
-        ':lua require"telescope.builtin".find_files({ hidden = true ,find_command = { "rg", "--files", "--no-ignore", "--hidden" }, file_ignore_patterns = { "*.egg-info","dist/",".lock","AutogluonModels","__pycache__",".semgrep",".mypy_cache",".ruff_cache","^.git/",".venv/",".ipynb_checkpoints" }})<CR>',
+        ':lua require"telescope.builtin".find_files({ hidden = true ,find_command = { "rg", "--files", "--no-ignore", "--hidden" }, file_ignore_patterns = { "*.egg-info","dist/",".lock","AutogluonModels","__pycache__",".semgrep",".mypy_cache",".ruff_cache","^.git/",".venv/",".ipynb_checkpoints","target",".DS_Store",".idea/","*.iml","**/*.rs.bk","Cargo.lock","tests/pg_regress/results","tests/pg_regress/regression.diffs","tests/pg_regress/regression.out" }})<CR>',
         { desc = '[F]ile Search' }
       )
       vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
@@ -816,6 +816,7 @@ require('lazy').setup({
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
         'debugpy',
+        'codelldb',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
