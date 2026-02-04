@@ -87,6 +87,10 @@ return {
       module = 'uvicorn',
       args = { 'src.main:app', '--reload' },
       justMyCode = true,
+      env = {
+
+        TEST_MODE = 'TRUE',
+      },
       rules = {
         -- Rule 1: Always include your own project code (optional, usually automatic)
         { include = true, path = '${workspaceFolder}/**' },
@@ -129,6 +133,7 @@ return {
         -- This is the magic line. It adds the project root to python path.
         -- So 'from src.mod import func' works even if running a file inside src/
         PYTHONPATH = '${workspaceFolder}',
+        TEST_MODE = 'TRUE',
       },
       pythonPath = function()
         return require('dap-python').resolve_python()
