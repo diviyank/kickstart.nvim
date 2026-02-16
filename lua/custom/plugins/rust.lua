@@ -50,7 +50,8 @@ return {
                 ['async-recursion'] = { 'async_recursion' },
               },
             },
-            checkOnSave = {
+            checkOnSave = true,
+            check = {
               command = 'clippy',
             },
           },
