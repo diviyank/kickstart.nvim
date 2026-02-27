@@ -28,6 +28,7 @@ return {
     local liblldb_path = ''
     vim.g.rustaceanvim = {
       server = {
+        cmd = { vim.fn.trim(vim.fn.system 'rustup which rust-analyzer') },
         on_attach = function(client, bufnr)
           -- This ensures your default Kickstart LSP keymaps work for Rust
           -- Inlay hints are enabled by default here
