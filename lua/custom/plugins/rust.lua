@@ -24,7 +24,8 @@ return {
 
     -- If you are on macOS, use:
     -- local liblldb_path = extension_path .. 'lsp/lib/liblldb.dylib'
-
+    local codelldb_path = ''
+    local liblldb_path = ''
     vim.g.rustaceanvim = {
       server = {
         on_attach = function(client, bufnr)
@@ -35,7 +36,8 @@ return {
         default_settings = {
           ['rust-analyzer'] = {
             cargo = {
-              allFeatures = true,
+              allFeatures = false,
+              features = { 'pg17' },
               loadOutDirsFromCheck = true,
               buildScripts = {
                 enable = true,
@@ -44,15 +46,23 @@ return {
             -- pgrx often uses a lot of proc macros
             procMacro = {
               enable = true,
+              attributes = {
+                enable = true,
+              },
               ignored = {
                 ['async-trait'] = { 'async_trait' },
                 ['napi-derive'] = { 'napi' },
                 ['async-recursion'] = { 'async_recursion' },
               },
             },
+            diagnostics = {
+              enable = true,
+              experimental = { enable = true },
+            },
             checkOnSave = true,
             check = {
               command = 'clippy',
+              features = { 'pg17' },
             },
           },
         },

@@ -224,7 +224,7 @@ vim.keymap.set('n', '<M-]>', ':bnext<CR>', { desc = 'Next buffer' })
 vim.keymap.set('i', '<M-[>', ':bprevious<CR>', { desc = 'Previous buffer' })
 vim.keymap.set('i', '<M-]>', ':bnext<CR>', { desc = 'Next buffer' })
 vim.keymap.set('n', '<leader>cc', ':Telescope neoclip<CR>', { desc = 'Neo[C]lip' })
-
+vim.keymap.set('x', 'p', [["_dP]], { noremap = true, silent = true })
 -- [[Window operations]]
 vim.keymap.set('n', '<leader>w', '<C-w>', { desc = 'Window menu' })
 vim.keymap.set('n', '<M-left>', '<C-w>h', { desc = 'Goto left window' })
