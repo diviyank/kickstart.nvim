@@ -776,6 +776,7 @@ require('lazy').setup({
         },
         gopls = {},
         golangci_lint_ls = {},
+        texlab = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         --
@@ -817,6 +818,7 @@ require('lazy').setup({
         'stylua', -- Used to format Lua code
         'debugpy',
         'codelldb',
+        'latexindent', -- Used to format LaTeX
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -872,6 +874,7 @@ require('lazy').setup({
         -- Conform can also run multiple formatters sequentially
         python = { 'ruff_fix', 'ruff_format', 'ruff_organize_imports' },
         sql = { 'sleek' },
+        tex = { 'latexindent' },
         -- rust = { 'rustfmt', lsp_format = 'fallback' },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
@@ -944,7 +947,7 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'latex', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
