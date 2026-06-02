@@ -750,13 +750,10 @@ require('lazy').setup({
         -- gopls = {},
         -- pyright = {},
         -- mypy = {},
-        -- rust_analyzer = {
-        --   ['rust-analyzer'] = {
-        --     checkOnSave = {
-        --       command = 'clippy',
-        --     },
-        --   },
-        -- },
+        -- NOTE: rust_analyzer is intentionally absent here — it is owned by
+        -- rustaceanvim (custom/plugins/rust.lua) and excluded from
+        -- mason-lspconfig's automatic_enable below. Configuring it here too
+        -- would spawn a duplicate, broken rust-analyzer client.
         ty = {
           settings = {
             ty = {
@@ -823,6 +820,12 @@ require('lazy').setup({
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
       require('mason-lspconfig').setup {
+        -- rust_analyzer is managed by rustaceanvim (custom/plugins/rust.lua).
+        -- Without this exclude, mason-lspconfig auto-enables a second, default
+        -- rust_analyzer client (bare `rust-analyzer` cmd -> Mason's standalone
+        -- build), which mis-resolves the sysroot/proc-macros and floods the
+        -- buffer with phantom errors that cargo/clippy never report.
+        automatic_enable = { exclude = { 'rust_analyzer' } },
         handlers = {
           function(server_name)
             local server = servers[server_name] or {}
@@ -943,22 +946,98 @@ require('lazy').setup({
   },
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
+    branch = 'master', -- master is frozen but stable; `main` is a full rewrite (see README)
+    lazy = false,
     build = ':TSUpdate',
-    main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
-    opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'latex', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
-      -- Autoinstall languages that are not installed
-      auto_install = true,
-      highlight = {
-        enable = true,
-        -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
-        --  If you are experiencing weird indenting issues, add the language to
-        --  the list of additional_vim_regex_highlighting and disabled languages for indent.
-        additional_vim_regex_highlighting = { 'ruby' },
-      },
-      indent = { enable = true, disable = { 'ruby' } },
-    },
+    config = function()
+      require('nvim-treesitter.configs').setup {
+        ensure_installed = { 'bash', 'c', 'diff', 'html', 'latex', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+        auto_install = true,
+        highlight = {
+          enable = true,
+          additional_vim_regex_highlighting = { 'ruby' },
+        },
+        indent = { enable = true, disable = { 'ruby' } },
+      }
+
+      -- nvim 0.12 compat: nvim-treesitter master is archived and uses `all = false`
+      -- to receive single nodes in match[id], but in 0.12+ that option is a no-op
+      -- (iter_matches always returns TSNode[]). Re-register predicates/directives
+      -- with an unwrapping shim.
+      if vim.fn.has 'nvim-0.12' == 1 then
+        local query = require 'vim.treesitter.query'
+        local function unwrap(node)
+          if type(node) == 'table' then return node[1] end
+          return node
+        end
+        local opts = { force = true, all = true }
+
+        query.add_predicate('nth?', function(match, _, _, pred)
+          local node = unwrap(match[pred[2]])
+          local n = tonumber(pred[3])
+          if node and node:parent() and node:parent():named_child_count() > n then
+            return node:parent():named_child(n) == node
+          end
+          return false
+        end, opts)
+
+        query.add_predicate('is?', function(match, _, bufnr, pred)
+          local locals = require 'nvim-treesitter.locals'
+          local node = unwrap(match[pred[2]])
+          local types = { unpack(pred, 3) }
+          if not node then return true end
+          local _, _, kind = locals.find_definition(node, bufnr)
+          return vim.tbl_contains(types, kind)
+        end, opts)
+
+        query.add_predicate('kind-eq?', function(match, _, _, pred)
+          local node = unwrap(match[pred[2]])
+          local types = { unpack(pred, 3) }
+          if not node then return true end
+          return vim.tbl_contains(types, node:type())
+        end, opts)
+
+        local html_script_type_languages = {
+          importmap = 'json',
+          module = 'javascript',
+          ['application/ecmascript'] = 'javascript',
+          ['text/ecmascript'] = 'javascript',
+        }
+        query.add_directive('set-lang-from-mimetype!', function(match, _, bufnr, pred, metadata)
+          local node = unwrap(match[pred[2]])
+          if not node then return end
+          local type_attr_value = vim.treesitter.get_node_text(node, bufnr)
+          local configured = html_script_type_languages[type_attr_value]
+          if configured then
+            metadata['injection.language'] = configured
+          else
+            local parts = vim.split(type_attr_value, '/', {})
+            metadata['injection.language'] = parts[#parts]
+          end
+        end, opts)
+
+        local non_filetype_match_injection_language_aliases = {
+          ex = 'elixir', pl = 'perl', sh = 'bash', uxn = 'uxntal', ts = 'typescript',
+        }
+        query.add_directive('set-lang-from-info-string!', function(match, _, bufnr, pred, metadata)
+          local node = unwrap(match[pred[2]])
+          if not node then return end
+          local alias = vim.treesitter.get_node_text(node, bufnr):lower()
+          local m = vim.filetype.match { filename = 'a.' .. alias }
+          metadata['injection.language'] = m or non_filetype_match_injection_language_aliases[alias] or alias
+        end, opts)
+
+        query.add_directive('downcase!', function(match, _, bufnr, pred, metadata)
+          local id = pred[2]
+          local node = unwrap(match[id])
+          if not node then return end
+          local text = vim.treesitter.get_node_text(node, bufnr, { metadata = metadata[id] }) or ''
+          if not metadata[id] then metadata[id] = {} end
+          metadata[id].text = string.lower(text)
+        end, opts)
+      end
+    end,
     -- There are additional nvim-treesitter modules that you can use to interact
     -- with nvim-treesitter. You should go explore a few and see what interests you:
     --
