@@ -93,6 +93,12 @@ vim.g.maplocalleader = ' '
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = false
 
+-- Put Mason's bin on PATH early, before plugins load. Mason normally prepends it
+-- during its own setup, but eager plugins (e.g. nvim-treesitter with auto_install)
+-- look up CLIs like `tree-sitter` at load time, which can run first. Doing it here
+-- guarantees Mason-managed tools are found regardless of plugin load order.
+vim.env.PATH = vim.fn.stdpath 'data' .. '/mason/bin' .. (vim.fn.has 'win32' == 1 and ';' or ':') .. vim.env.PATH
+
 -- [[ Setting options ]]
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
@@ -816,6 +822,10 @@ require('lazy').setup({
         'debugpy',
         'codelldb',
         'latexindent', -- Used to format LaTeX
+        -- Required to generate some parsers (e.g. latex) for nvim-treesitter.
+        -- Pinned to v0.25.10: nvim-treesitter (master, frozen) calls
+        -- `tree-sitter generate --no-bindings`, a flag CLI 0.26+ removed.
+        { 'tree-sitter-cli', version = 'v0.25.10' },
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
