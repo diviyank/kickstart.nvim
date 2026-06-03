@@ -161,7 +161,7 @@ vim.opt.inccommand = 'split'
 -- Show which line your cursor is on
 vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 10
+vim.opt.scrolloff = 4
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -216,6 +216,11 @@ vim.keymap.set('n', '<C-up>', '<C-u>', { desc = 'Move Up a page' })
 vim.keymap.set('n', '<C-down>', '<C-d>', { desc = 'Move Down a page' })
 vim.keymap.set('v', '<C-up>', '<C-u>', { desc = 'Move Up a page' })
 vim.keymap.set('v', '<C-down>', '<C-d>', { desc = 'Move Down a page' })
+
+-- Mouse wheel: 1 line per tick. Default 3 amplifies kitty+tmux event bursts —
+-- a fast spin sends ~30 events × 3 lines = 90 redraws, each going to lazy-load
+-- and queue. ver:1 makes each tick cheap so the queue drains.
+vim.opt.mousescroll = 'ver:1,hor:6'
 vim.keymap.set('n', '<C-x><C-s>', ':w<CR>', { desc = 'Save buffer' })
 vim.keymap.set('n', '<C-x><C-c>', ':wqa<CR>', { desc = 'Quit nvim' })
 vim.keymap.set('i', '<C-h>', '<C-w>', { desc = 'delete backwards', noremap = true })
